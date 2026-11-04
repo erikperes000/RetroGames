@@ -1,0 +1,37 @@
+# Credenciais e variáveis de ambiente
+.env
+.env.*
+!.env.example
+
+# Segredos e configurações locais
+secrets.json
+secrets.*.json
+appsettings.*.local.json
+
+# .NET
+[Bb]in/
+[Oo]bj/
+*.user
+*.suo
+*.cache
+
+# Node.js / React / Vite
+node_modules/
+dist/
+coverage/
+.npm/
+
+# Resultados de testes
+TestResults/
+
+# IDEs e editores
+.vs/
+.idea/
+
+# Logs
+*.log
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+desktop.ini

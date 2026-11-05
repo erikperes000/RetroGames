@@ -1,25 +1,26 @@
 namespace RetroGames.Model.Model
 {
-    public class Usuario{
-        // Coluna: co_seq_usuario
-        public uint CoSeqUsuario { get; set; }
+    public class Usuario
+    {
+        // Coluna: co_seq_usuario (chave primária)
+        public uint Id { get; set; }
 
         // Coluna: no_usuario
-        public string NoUsuario { get; set; } = string.Empty;
+        public string Nome { get; set; } = string.Empty;
 
         // Coluna: ds_email
-        public string DsEmail { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
 
         // Coluna: ds_senha_hash
-        public string DsSenhaHash { get; set; } = string.Empty;
+        public string SenhaHash { get; set; } = string.Empty;
 
         // Coluna: st_ativo
-        public bool StAtivo { get; set; }
+        public bool Ativo { get; set; }
 
         // Coluna: dt_cadastro
-        public DateTime DtCadastro { get; set; }
+        public DateTime DataCadastro { get; set; }
 
-        // Coluna: co_perfil
-        public ushort CoPerfil { get; set; }
+        // Coluna: co_perfil (chave estrangeira)
+        public ushort IdPerfil { get; set; }
     }
 }

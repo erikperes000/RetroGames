@@ -1,16 +1,17 @@
 namespace RetroGames.Model.Model
 {
-    public class Plataforma{
-        // Coluna: co_seq_plataforma
-        public uint CoSeqPlataforma { get; set; }
+    public class Plataforma
+    {
+        // Coluna: co_seq_plataforma (chave primária)
+        public uint Id { get; set; }
 
         // Coluna: no_plataforma
-        public string NoPlataforma { get; set; } = string.Empty;
+        public string Nome { get; set; } = string.Empty;
 
         // Coluna: no_fabricante
-        public string NoFabricante { get; set; } = string.Empty;
+        public string Fabricante { get; set; } = string.Empty;
 
         // Coluna: nu_ano_lancamento
-        public ushort NuAnoLancamento { get; set; }
+        public ushort AnoLancamento { get; set; }
     }
 }

@@ -1,34 +1,35 @@
 namespace RetroGames.Model.Model
 {
-    public class Jogo{
-        // Coluna: co_seq_jogo
-        public uint CoSeqJogo { get; set; }
+    public class Jogo
+    {
+        // Coluna: co_seq_jogo (chave primária)
+        public uint Id { get; set; }
 
         // Coluna: no_jogo
-        public string NoJogo { get; set; } = string.Empty;
+        public string Nome { get; set; } = string.Empty;
 
-        // Coluna: ds_jogo
-        public string? DsJogo { get; set; }
+        // Coluna: ds_jogo (opcional)
+        public string? Descricao { get; set; }
 
         // Coluna: nu_ano_lancamento
-        public ushort NuAnoLancamento { get; set; }
+        public ushort AnoLancamento { get; set; }
 
         // Coluna: vl_preco
-        public decimal VlPreco { get; set; }
+        public decimal Preco { get; set; }
 
         // Coluna: qt_estoque
-        public uint QtEstoque { get; set; }
+        public uint Estoque { get; set; }
 
         // Coluna: st_ativo
-        public bool StAtivo { get; set; }
+        public bool Ativo { get; set; }
 
         // Coluna: dt_cadastro
-        public DateTime DtCadastro { get; set; }
+        public DateTime DataCadastro { get; set; }
 
-        // Coluna: co_plataforma
-        public uint CoPlataforma { get; set; }
+        // Coluna: co_plataforma (chave estrangeira)
+        public uint IdPlataforma { get; set; }
 
-        // Coluna: co_condicao_jogo
-        public ushort CoCondicaoJogo { get; set; }
+        // Coluna: co_condicao_jogo (chave estrangeira)
+        public ushort IdCondicaoJogo { get; set; }
     }
 }

@@ -1,10 +1,11 @@
 namespace RetroGames.Model.Model
 {
-    public class CondicoJogo{
-        //Coluna: co_condicao_jogo
-        public ushort CoCondicaoJogo { get; set; }
+    public class CondicaoJogo
+    {
+        // Coluna: co_condicao_jogo (chave primária)
+        public ushort Id { get; set; }
 
-        //Coluna: ds_condicao_jogo
-        public string DsCondicaoJogo { get; set; } = string.Empty;
+        // Coluna: ds_condicao_jogo
+        public string Descricao { get; set; } = string.Empty;
     }
 }

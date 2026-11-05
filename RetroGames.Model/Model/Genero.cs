@@ -1,10 +1,11 @@
 namespace RetroGames.Model.Model
 {
-    public class Genero{
-        //Coluna: co_seq_genero
-        public uint CoSeqGenero { get; set; }
+    public class Genero
+    {
+        // Coluna: co_seq_genero (chave primária)
+        public uint Id { get; set; }
 
-        //Coluna: no_genero
-        public string NoGenero { get; set; } = string.Empty;
+        // Coluna: no_genero
+        public string Nome { get; set; } = string.Empty;
     }
 }

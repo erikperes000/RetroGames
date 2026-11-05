@@ -4,8 +4,7 @@ using RetroGames.Repository.Exceptions;
 
 namespace RetroGames.Repository.Base;
 
-public abstract class RepositoryBase //abstract para que a classe seja a base e não seja instanciada diretamente.
-{
+public abstract class RepositoryBase{ //abstract para que a classe seja a base e não seja instanciada diretamente.
     private readonly RepositoryConfig _config;
 
     protected RepositoryBase(RepositoryConfig config){

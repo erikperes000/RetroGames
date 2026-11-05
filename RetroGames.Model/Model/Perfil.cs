@@ -1,7 +1,5 @@
-namespace RetroGames.Model.Model
-{
-    public class Perfil
-    {
+namespace RetroGames.Model.Model{
+    public class Perfil{
         // Coluna: co_perfil (chave primária)
         public ushort Id { get; set; }
 

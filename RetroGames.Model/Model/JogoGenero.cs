@@ -1,7 +1,5 @@
-namespace RetroGames.Model.Model
-{
-    public class JogoGenero
-    {
+namespace RetroGames.Model.Model{
+    public class JogoGenero{
         // Coluna: co_jogo (parte da chave primária e chave estrangeira)
         public uint IdJogo { get; set; }
 

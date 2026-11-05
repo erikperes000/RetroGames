@@ -1,7 +1,5 @@
-namespace RetroGames.Model.Model
-{
-    public class Plataforma
-    {
+namespace RetroGames.Model.Model{
+    public class Plataforma{
         // Coluna: co_seq_plataforma (chave primária)
         public uint Id { get; set; }
 

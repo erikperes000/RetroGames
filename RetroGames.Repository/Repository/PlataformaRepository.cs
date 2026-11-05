@@ -6,8 +6,7 @@ using RetroGames.Repository.Interfaces;
 
 namespace RetroGames.Repository.Repository;
 
-public class PlataformaRepository : RepositoryBase, IPlataformaRepository
-{
+public class PlataformaRepository : RepositoryBase, IPlataformaRepository{
     public PlataformaRepository(RepositoryConfig config)
         : base(config)
     {

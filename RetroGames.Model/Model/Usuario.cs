@@ -1,7 +1,5 @@
-namespace RetroGames.Model.Model
-{
-    public class Usuario
-    {
+namespace RetroGames.Model.Model{
+    public class Usuario{
         // Coluna: co_seq_usuario (chave primária)
         public uint Id { get; set; }
 

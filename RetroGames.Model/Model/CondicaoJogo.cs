@@ -1,7 +1,5 @@
-namespace RetroGames.Model.Model
-{
-    public class CondicaoJogo
-    {
+namespace RetroGames.Model.Model{
+    public class CondicaoJogo{
         // Coluna: co_condicao_jogo (chave primária)
         public ushort Id { get; set; }
 

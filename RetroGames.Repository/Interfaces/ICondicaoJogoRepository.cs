@@ -1,5 +1,8 @@
+using RetroGames.Model.Model;
+
 namespace RetroGames.Repository.Interfaces;
 
-public interface ICondicaoJogoRepository{
-    List<Condicao> Listar();
+public interface ICondicaoJogoRepository
+{
+    Task<List<CondicaoJogo>> ListarAsync();
 }

@@ -1,5 +1,7 @@
+using RetroGames.Model.Model;
+
 namespace RetroGames.Repository.Interfaces;
 
 public interface IGeneroRepository{
-    List<Genero> Listar();
+    Task<List<Genero>> ListarAsync();
 }

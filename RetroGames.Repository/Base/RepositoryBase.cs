@@ -4,32 +4,39 @@ using RetroGames.Repository.Exceptions;
 
 namespace RetroGames.Repository.Base;
 
-public abstract class RepositoryBase{ //abstract para que a classe seja a base e não seja instanciada diretamente.
+public abstract class RepositoryBase{
     private readonly RepositoryConfig _config;
 
     protected RepositoryBase(RepositoryConfig config){
-        _config = config; //guarda a configuração recebida no construtor.
+        _config = config;
     }
 
-    protected MySqlConnection AbrirConexao(){
+    // Abre uma conexão de forma assíncrona.
+    protected async Task<MySqlConnection> AbrirConexaoAsync(){
         var conexao = new MySqlConnection(_config.ConnectionString);
-        conexao.Open();
-        return conexao;
+        try{
+            await conexao.OpenAsync();
+            return conexao;
+        }catch{
+            await conexao.DisposeAsync();
+            throw;
+        }
     }
 
+    // Cria um comando SQL.
     protected MySqlCommand CriarComando(string sql, MySqlConnection conexao){
         return new MySqlCommand(sql, conexao);
     }
 
-    //insere parâmetros na query evitando concatenar valores diretamente no SQL.
+    // Adiciona parâmetros ao comando.
     protected void AdicionarParametro(MySqlCommand comando, string nome, object valor){
         comando.Parameters.AddWithValue(nome, valor);
     }
 
-    //executa INSERT ou UPDATE e captura o erro 1062.
-    protected int ExecutarGravacao(MySqlCommand comando){
+    // Executa INSERT ou UPDATE de forma assíncrona.
+    protected async Task<int> ExecutarGravacaoAsync(MySqlCommand comando){
         try{
-            return comando.ExecuteNonQuery();
+            return await comando.ExecuteNonQueryAsync();
         }catch (MySqlException ex) when (ex.Number == 1062){
             throw new RegistroDuplicadoException("Já existe um registro com esse valor único.");
         }

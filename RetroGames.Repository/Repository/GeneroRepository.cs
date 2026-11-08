@@ -5,23 +5,31 @@ using RetroGames.Repository.Interfaces;
 
 namespace RetroGames.Repository.Repository;
 
-public class GeneroRepository : RepositoryBase, IGeneroRepository{
+public class GeneroRepository : RepositoryBase, IGeneroRepository
+{
     public GeneroRepository(RepositoryConfig config)
         : base(config)
     {
     }
 
-    public List<Genero> Listar(){
-        const string sql = @"SELECT co_seq_genero, no_genero FROM tb_genero ORDER BY no_genero;";
+    public async Task<List<Genero>> ListarAsync()
+    {
+        const string sql = @"
+            SELECT co_seq_genero, no_genero
+            FROM tb_genero
+            ORDER BY no_genero;
+        ";
 
-        using var conexao = AbrirConexao();
-        using var comando = CriarComando(sql, conexao);
-        using var leitor = comando.ExecuteReader();
+        await using var conexao = await AbrirConexaoAsync();
+        await using var comando = CriarComando(sql, conexao);
+        await using var leitor = await comando.ExecuteReaderAsync();
 
         var generos = new List<Genero>();
 
-        while (leitor.Read()){
-            generos.Add(new Genero{
+        while (await leitor.ReadAsync())
+        {
+            generos.Add(new Genero
+            {
                 Id = leitor.GetUInt32("co_seq_genero"),
                 Nome = leitor.GetString("no_genero")
             });

@@ -3,12 +3,17 @@ using RetroGames.Model.Model;
 namespace RetroGames.Repository.Interfaces;
 
 public interface IPlataformaRepository{
-    List<Plataforma> Listar();
-    Plataforma? BuscarPorId(uint id);
+    Task<List<Plataforma>> ListarAsync();
 
-    bool ExisteComNome(string nome, uint? idIgnorar = null);
-    bool PossuiJogos(uint id);
-    uint Inserir(Plataforma plataforma);
-    void Alterar(Plataforma plataforma);
-    void Excluir(uint id);
+    Task<Plataforma?> BuscarPorIdAsync(uint id);
+
+    Task<bool> ExisteComNomeAsync(string nome, uint? idIgnorar = null);
+
+    Task<bool> PossuiJogosAsync(uint id);
+
+    Task<uint> InserirAsync(Plataforma plataforma);
+
+    Task AlterarAsync(Plataforma plataforma);
+
+    Task ExcluirAsync(uint id);
 }

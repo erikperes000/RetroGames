@@ -30,6 +30,9 @@ public static class InjecaoDependenciaConfig{
         services.AddScoped<ICondicaoJogoRepository>(
             provider => provider.GetRequiredService<IRepositorySet>().CondicaoJogo);
 
+        services.AddScoped<IGeneroService, GeneroService>();
+        services.AddScoped<ICondicaoJogoService, CondicaoJogoService>();
+
         return services;
     }
 

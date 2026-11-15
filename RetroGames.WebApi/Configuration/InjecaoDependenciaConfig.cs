@@ -38,6 +38,7 @@ public static class InjecaoDependenciaConfig{
 
     public static IServiceCollection AddServicosDeNegocio(this IServiceCollection services){
         services.AddScoped<IPlataformaService, PlataformaService>();
+        services.AddScoped<IJogoService, JogoService>();
         return services;
     }
 }

@@ -3,7 +3,7 @@ using RetroGames.Model.Model;
 using RetroGames.Repository.Interfaces;
 using RetroGames.Services.Interfaces;
 
-namespace RetroGames.Services;
+namespace RetroGames.Services.Services;
 
 public class JogoService : IJogoService{
     private readonly IRepositorySet repositorio;

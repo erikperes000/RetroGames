@@ -1,6 +1,11 @@
+using DotNetEnv;
+using FluentValidation;
+using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
+using RetroGames.WebApi.ActionFilters;
+using RetroGames.WebApi.ApiModels.Constantes;
 using RetroGames.WebApi.Configuration;
 using RetroGames.WebApi.Middlewares;
-using DotNetEnv;
 
 Env.TraversePath().Load();
 
@@ -22,8 +27,62 @@ if (string.IsNullOrWhiteSpace(connectionString))
 // Registra os repositórios e os Services.
 builder.Services.AddRepositorios(connectionString);
 
-// Registra os controllers.
-builder.Services.AddControllers();
+// Registra automaticamente os validators do projeto.
+builder.Services.AddValidatorsFromAssemblyContaining<Program>();
+
+// Registra o filtro de validação.
+builder.Services.AddScoped<FluentValidationFilter>();
+
+// Registra os controllers e o filtro global.
+builder.Services.AddControllers(opcoes =>
+{
+    opcoes.Filters.Add<FluentValidationFilter>();
+});
+
+// Configura o tratamento automático de erros de ModelState.
+builder.Services.Configure<ApiBehaviorOptions>(opcoes =>
+{
+    opcoes.InvalidModelStateResponseFactory = contexto =>
+    {
+        // Verifica se o erro foi causado por um JSON malformado.
+        var jsonMalformado = contexto.ModelState.Values
+            .SelectMany(valor => valor.Errors)
+            .Any(erro =>
+                erro.Exception is JsonException ||
+                erro.Exception?.InnerException is JsonException);
+
+        // JSON malformado: não apresenta lista de campos.
+        if (jsonMalformado)
+        {
+            return new BadRequestObjectResult(new
+            {
+                responseCode = ResponseCodes.MODEL_STATE_INVALIDO,
+                errorMessage = "Há um erro com o modelo enviado."
+            });
+        }
+
+        // Organiza os erros por campo em camelCase.
+        var errosPorCampo = contexto.ModelState
+            .Where(item => item.Value != null)
+            .Where(item => item.Value!.Errors.Count > 0)
+            .ToDictionary(
+                item => JsonNamingPolicy.CamelCase.ConvertName(
+                    item.Key),
+                item => item.Value!.Errors
+                    .Select(erro =>
+                        string.IsNullOrWhiteSpace(erro.ErrorMessage)
+                            ? "Valor inválido."
+                            : erro.ErrorMessage)
+                    .ToArray());
+
+        return new BadRequestObjectResult(new
+        {
+            responseCode = ResponseCodes.MODEL_STATE_INVALIDO,
+            data = errosPorCampo,
+            errorMessage = "Há um erro com o modelo enviado."
+        });
+    };
+});
 
 // Registra o OpenAPI.
 builder.Services.AddOpenApi();

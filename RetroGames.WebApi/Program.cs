@@ -1,5 +1,6 @@
 using DotNetEnv;
 using FluentValidation;
+using RetroGames.WebApi.Validators.Jogo;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 using RetroGames.WebApi.ActionFilters;
@@ -34,9 +35,19 @@ builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 builder.Services.AddScoped<FluentValidationFilter>();
 
 // Registra os controllers e o filtro global.
+//builder.Services.AddValidatorsFromAssemblyContaining<InserirJogoRequestValidator>();
+//builder.Services.AddControllers();
+builder.Services.AddValidatorsFromAssemblyContaining<
+    InserirJogoRequestValidator>();
+
 builder.Services.AddControllers(opcoes =>
 {
     opcoes.Filters.Add<FluentValidationFilter>();
+});
+
+builder.Services.Configure<ApiBehaviorOptions>(opcoes =>
+{
+    opcoes.SuppressModelStateInvalidFilter = true;
 });
 
 // Configura o tratamento automático de erros de ModelState.

@@ -4,6 +4,8 @@ using RetroGames.WebApi.ApiModels.Constantes;
 using RetroGames.WebApi.ApiModels.Requests;
 using RetroGames.WebApi.ApiModels.Responses;
 using RetroGames.WebApi.Mappers;
+using RetroGames.Model.Model;
+using RetroGames.WebApi.Validators.Jogo;
 
 namespace RetroGames.WebApi.Controllers;
 
@@ -68,6 +70,63 @@ public class JogoController : ControllerBase
                 ResponseCode = ResponseCodes.SUCESSO,
                 Data = dados
             };
+
+        return Ok(resposta);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Inserir(
+        [FromBody] InserirJogoRequestApiModel request)
+    {
+        var jogo = await _jogoService.InserirAsync(
+            request.ParaModel(),
+            request.IdsGeneros);
+
+        var dados = jogo.ParaDetalhe();
+
+        var resposta =
+            new RetroGamesResponseApiModel<ListarPorIdJogoResponseApiModel>
+            {
+                ResponseCode = ResponseCodes.SUCESSO,
+                Data = dados
+            };
+
+        return CreatedAtAction(
+            nameof(ListarPorId),
+            new { id = jogo.Jogo.Id },
+            resposta);
+    }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Alterar(
+        uint id,
+        [FromBody] AlterarJogoRequestApiModel request)
+    {
+        var jogo = await _jogoService.AlterarAsync(
+            request.ParaModel(id),
+            request.IdsGeneros);
+
+        var dados = jogo.ParaDetalhe();
+
+        var resposta =
+            new RetroGamesResponseApiModel<ListarPorIdJogoResponseApiModel>
+            {
+                ResponseCode = ResponseCodes.SUCESSO,
+                Data = dados
+            };
+
+        return Ok(resposta);
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Excluir(uint id)
+    {
+        await _jogoService.DesativarAsync(id);
+
+        var resposta = new RetroGamesResponseApiModel
+        {
+            ResponseCode = ResponseCodes.SUCESSO
+        };
 
         return Ok(resposta);
     }

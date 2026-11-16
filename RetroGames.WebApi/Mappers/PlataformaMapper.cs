@@ -1,4 +1,5 @@
 using RetroGames.Model.Model;
+using RetroGames.WebApi.ApiModels.Requests;
 using RetroGames.WebApi.ApiModels.Responses;
 
 namespace RetroGames.WebApi.Mappers;
@@ -14,6 +15,30 @@ public static class PlataformaMapper
             Nome = plataforma.Nome,
             Fabricante = plataforma.Fabricante,
             AnoLancamento = plataforma.AnoLancamento
+        };
+    }
+
+    public static Plataforma ParaModel(
+        this InserirPlataformaRequestApiModel request)
+    {
+        return new Plataforma
+        {
+            Nome = request.Nome,
+            Fabricante = request.Fabricante,
+            AnoLancamento = request.AnoLancamento
+        };
+    }
+
+    public static Plataforma ParaModel(
+        this AlterarPlataformaRequestApiModel request,
+        uint id)
+    {
+        return new Plataforma
+        {
+            Id = id,
+            Nome = request.Nome,
+            Fabricante = request.Fabricante,
+            AnoLancamento = request.AnoLancamento
         };
     }
 }

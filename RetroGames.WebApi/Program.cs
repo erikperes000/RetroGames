@@ -10,6 +10,7 @@ using RetroGames.WebApi.Middlewares;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Mvc;
 using RetroGames.WebApi.ApiModels.Responses;
+using RetroGames.Services.Interfaces;
 
 Env.TraversePath().Load();
 
@@ -140,6 +141,26 @@ builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
 
 var app = builder.Build();
+
+// Cria o administrador inicial, caso ainda não exista.
+using (var escopo = app.Services.CreateScope())
+{
+    var autenticacaoService = escopo.ServiceProvider
+        .GetRequiredService<IAutenticacaoService>();
+
+    var emailAdministrador = builder.Configuration[
+        "AdminInicial:Email"
+    ];
+
+    var senhaAdministrador = builder.Configuration[
+        "AdminInicial:Senha"
+    ];
+
+    await autenticacaoService.GarantirAdministradorInicialAsync(
+        emailAdministrador,
+        senhaAdministrador
+    );
+}
 
 app.UseExceptionHandler();
 

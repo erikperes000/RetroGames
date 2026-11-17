@@ -11,6 +11,7 @@ using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Mvc;
 using RetroGames.WebApi.ApiModels.Responses;
 using RetroGames.Services.Interfaces;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 Env.TraversePath().Load();
 
@@ -140,6 +141,8 @@ builder.Services.AddServicosDeNegocio();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
 
+builder.Services.AddAutenticacao();
+
 var app = builder.Build();
 
 // Cria o administrador inicial, caso ainda não exista.
@@ -177,6 +180,9 @@ if (app.Environment.IsDevelopment())
         );
     });
 }
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 // Mapeia os controllers.
 app.MapControllers();

@@ -35,6 +35,9 @@ public class PlataformaService : IPlataformaService{
         var nomeExiste = await _repositorio.Plataforma
             .ExisteComNomeAsync(plataforma.Nome);
 
+        Console.WriteLine($"Nome recebido: '{plataforma.Nome}'");
+        Console.WriteLine($"Nome encontrado: {nomeExiste}");
+
         if (nomeExiste)
             throw new BusinessRuleException(BusinessErrors.PLATAFORMA_NOME_DUPLICADO);
 
@@ -61,6 +64,9 @@ public class PlataformaService : IPlataformaService{
 
         var nomeExiste = await _repositorio.Plataforma
             .ExisteComNomeAsync(plataforma.Nome, plataforma.Id);
+
+        Console.WriteLine($"Nome recebido: '{plataforma.Nome}'");
+        Console.WriteLine($"Nome encontrado: {nomeExiste}");
 
         if (nomeExiste)
             throw new BusinessRuleException(BusinessErrors.PLATAFORMA_NOME_DUPLICADO);

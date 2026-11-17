@@ -7,6 +7,9 @@ using RetroGames.WebApi.ActionFilters;
 using RetroGames.WebApi.ApiModels.Constantes;
 using RetroGames.WebApi.Configuration;
 using RetroGames.WebApi.Middlewares;
+using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Mvc;
+using RetroGames.WebApi.ApiModels.Responses;
 
 Env.TraversePath().Load();
 
@@ -35,19 +38,52 @@ builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 builder.Services.AddScoped<FluentValidationFilter>();
 
 // Registra os controllers e o filtro global.
-//builder.Services.AddValidatorsFromAssemblyContaining<InserirJogoRequestValidator>();
-//builder.Services.AddControllers();
-builder.Services.AddValidatorsFromAssemblyContaining<
-    InserirJogoRequestValidator>();
+builder.Services.AddControllers()
+    .ConfigureApiBehaviorOptions(options =>
+    {
+        options.InvalidModelStateResponseFactory = context =>
+        {
+            var erros = context.ModelState.Values
+                .SelectMany(valor => valor.Errors);
 
-builder.Services.AddControllers(opcoes =>
-{
-    opcoes.Filters.Add<FluentValidationFilter>();
-});
+            var jsonMalformado = erros.Any(erro =>
+                erro.Exception is JsonException ||
+                erro.Exception?.InnerException is JsonException);
 
-builder.Services.Configure<ApiBehaviorOptions>(opcoes =>
+            if (jsonMalformado)
+            {
+                return new BadRequestObjectResult(new
+                {
+                    responseCode = 3,
+                    errorMessage = "JSON inválido ou malformado."
+                });
+            }
+
+            var errosPorCampo = context.ModelState
+                .Where(item => item.Value != null)
+                .Where(item => item.Value!.Errors.Count > 0)
+                .ToDictionary(
+                    item => JsonNamingPolicy.CamelCase.ConvertName(item.Key),
+                    item => item.Value!.Errors
+                        .Select(erro =>
+                            string.IsNullOrWhiteSpace(erro.ErrorMessage)
+                                ? "Valor inválido."
+                                : erro.ErrorMessage)
+                        .ToArray());
+
+            return new BadRequestObjectResult(new
+            {
+                responseCode = 3,
+                data = errosPorCampo,
+                errorMessage = "Há um erro com o modelo enviado."
+            });
+        };
+    });
+
+builder.Services.ConfigureHttpJsonOptions(opcoes =>
 {
-    opcoes.SuppressModelStateInvalidFilter = true;
+    opcoes.SerializerOptions.NumberHandling =
+        JsonNumberHandling.Strict;
 });
 
 // Configura o tratamento automático de erros de ModelState.

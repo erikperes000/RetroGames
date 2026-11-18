@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using RetroGames.WebApi.ApiModels.Responses;
 using RetroGames.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 
 Env.TraversePath().Load();
 
@@ -143,6 +144,8 @@ builder.Services.AddProblemDetails();
 
 builder.Services.AddAutenticacao();
 
+builder.Services.AddAutorizacao();
+
 var app = builder.Build();
 
 // Cria o administrador inicial, caso ainda não exista.
@@ -170,7 +173,7 @@ app.UseExceptionHandler();
 // Configura o Swagger somente em ambiente de desenvolvimento.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    app.MapOpenApi().AllowAnonymous();
 
     app.UseSwaggerUI(options =>
     {
@@ -183,8 +186,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseAuthentication();
 app.UseAuthorization();
-
-// Mapeia os controllers.
 app.MapControllers();
 
 app.Run();

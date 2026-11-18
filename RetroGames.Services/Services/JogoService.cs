@@ -7,10 +7,15 @@ namespace RetroGames.Services.Services;
 
 public class JogoService : IJogoService{
     private readonly IRepositorySet repositorio;
+    private readonly IUsuarioAtualService usuarioAtual;
 
-    public JogoService(IRepositorySet repositorio)
+    /*public JogoService(IRepositorySet repositorio)
     {
         this.repositorio = repositorio;
+    }*/
+    public JogoService(IRepositorySet repositorio, IUsuarioAtualService usuarioAtual){
+        this.repositorio = repositorio;
+        this.usuarioAtual = usuarioAtual;
     }
 
     // LISTAR JOGOS
@@ -36,13 +41,17 @@ public class JogoService : IJogoService{
                 .ToList();
         }
 
+        // Somente administradores podem incluir jogos inativos.
+        var podeIncluirInativos =
+            incluirInativos && usuarioAtual.EhAdministrador;
+
         var (jogos, total) = await repositorio.Jogo.ListarAsync(
             pagina,
             tamanhoPagina,
             nome,
             idPlataforma,
             idsJogos,
-            incluirInativos
+            podeIncluirInativos
         );
 
         var detalhes = await MontarDetalhesAsync(jogos);
@@ -56,9 +65,16 @@ public class JogoService : IJogoService{
         var jogo = await repositorio.Jogo.BuscarPorIdAsync(id);
 
         if (jogo == null)
-            throw new BusinessRuleException(BusinessErrors.JOGO_NAO_ENCONTRADO);
+            throw new BusinessRuleException(
+                BusinessErrors.JOGO_NAO_ENCONTRADO);
 
-        var detalhes = await MontarDetalhesAsync(new List<Jogo> { jogo });
+        // Jogos inativos só podem ser visualizados pelo administrador.
+        if (!jogo.Ativo && !usuarioAtual.EhAdministrador)
+            throw new BusinessRuleException(
+                BusinessErrors.JOGO_NAO_ENCONTRADO);
+
+        var detalhes = await MontarDetalhesAsync(
+            new List<Jogo> { jogo });
 
         return detalhes.Single();
     }

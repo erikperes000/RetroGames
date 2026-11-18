@@ -57,8 +57,6 @@ public static class AutenticacaoConfig
                 };
             });
 
-        services.AddAuthorization();
-
         return services;
     }
 }

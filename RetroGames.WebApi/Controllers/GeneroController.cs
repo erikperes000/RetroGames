@@ -3,6 +3,7 @@ using RetroGames.Services.Interfaces;
 using RetroGames.WebApi.ApiModels.Constantes;
 using RetroGames.WebApi.ApiModels.Responses;
 using RetroGames.WebApi.Mappers;
+using Microsoft.AspNetCore.Authorization;
 
 namespace RetroGames.WebApi.Controllers;
 
@@ -18,6 +19,7 @@ public class GeneroController : ControllerBase
     }
 
     [HttpGet]
+    [AllowAnonymous]
     public async Task<IActionResult> Listar()
     {
         var generos = await _generoService.ListarAsync();

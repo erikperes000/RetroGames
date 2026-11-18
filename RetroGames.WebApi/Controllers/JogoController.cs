@@ -6,6 +6,8 @@ using RetroGames.WebApi.ApiModels.Responses;
 using RetroGames.WebApi.Mappers;
 using RetroGames.Model.Model;
 using RetroGames.WebApi.Validators.Jogo;
+using Microsoft.AspNetCore.Authorization;
+using RetroGames.WebApi.Configuration;
 
 namespace RetroGames.WebApi.Controllers;
 
@@ -21,6 +23,7 @@ public class JogoController : ControllerBase
     }
 
     [HttpGet]
+    [AllowAnonymous]
     public async Task<IActionResult> Listar(
         [FromQuery] ListarJogoRequestApiModel request)
     {
@@ -30,7 +33,7 @@ public class JogoController : ControllerBase
             nome: request.Busca,
             idPlataforma: request.IdPlataforma,
             idGenero: request.IdGenero,
-            incluirInativos: false);
+            incluirInativos: request.IncluirInativos);
 
         var itens = jogos
             .Select(jogo => jogo.ParaListagem())
@@ -58,6 +61,7 @@ public class JogoController : ControllerBase
     }
 
     [HttpGet("{id}")]
+    [AllowAnonymous]
     public async Task<IActionResult> ListarPorId(uint id)
     {
         var jogo = await _jogoService.BuscarPorIdAsync(id);
@@ -75,6 +79,7 @@ public class JogoController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Policy = Politicas.Administrador)]
     public async Task<IActionResult> Inserir(
         [FromBody] InserirJogoRequestApiModel request)
     {
@@ -98,6 +103,7 @@ public class JogoController : ControllerBase
     }
 
     [HttpPut("{id}")]
+    [Authorize(Policy = Politicas.Administrador)]
     public async Task<IActionResult> Alterar(
         uint id,
         [FromBody] AlterarJogoRequestApiModel request)
@@ -119,6 +125,7 @@ public class JogoController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [Authorize(Policy = Politicas.Administrador)]
     public async Task<IActionResult> Excluir(uint id)
     {
         await _jogoService.DesativarAsync(id);

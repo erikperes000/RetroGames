@@ -40,7 +40,9 @@ public class InserirJogoRequestValidator
         RuleFor(x => x.IdsGeneros)
             .NotNull()
             .WithMessage("Informe ao menos um gênero.")
-            .Must(ids => ids != null && ids.Count > 0)
-            .WithMessage("Informe ao menos um gênero.");
+            .Must(ids => ids != null && ids.Count >= 1)
+            .WithMessage("Informe ao menos um gênero.")
+            .Must(ids => ids != null && ids.Count <= 2)
+            .WithMessage("Selecione no máximo dois gêneros.");
     }
 }

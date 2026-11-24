@@ -8,3 +8,18 @@ export function obterMensagemErro(erro) {
     'Ocorreu um erro ao realizar a operação.'
   )
 }
+
+export function obterErrosDosCampos(erro) {
+  const resposta = erro.response?.data
+
+  if (resposta?.responseCode !== 3 || !resposta.data) {
+    return {}
+  }
+
+  return Object.fromEntries(
+    Object.entries(resposta.data).map(([campo, mensagens]) => [
+      campo,
+      Array.isArray(mensagens) ? mensagens[0] : mensagens
+    ])
+  )
+}

@@ -13,13 +13,9 @@ public interface IJogoService{
 
     Task<JogoDetalheServiceModel> BuscarPorIdAsync(uint id);
 
-    Task<JogoDetalheServiceModel> InserirAsync(
-        Jogo jogo,
-        List<uint> idsGeneros);
+    Task<JogoDetalheServiceModel> InserirAsync(Jogo jogo, List<uint> idsGeneros);
 
-    Task<JogoDetalheServiceModel> AlterarAsync(
-        Jogo jogo,
-        List<uint> idsGeneros);
+    Task<JogoDetalheServiceModel> AlterarAsync(Jogo jogo, List<uint> idsGeneros);
 
     Task DesativarAsync(uint id);
 }

@@ -7,13 +7,11 @@ namespace RetroGames.Services.Services;
 public class CondicaoJogoService : ICondicaoJogoService{
     private readonly IRepositorySet _repositorio;
 
-    public CondicaoJogoService(IRepositorySet repositorio)
-    {
+    public CondicaoJogoService(IRepositorySet repositorio){
         _repositorio = repositorio;
     }
 
-    public async Task<List<CondicaoJogo>> ListarAsync()
-    {
+    public async Task<List<CondicaoJogo>> ListarAsync(){
         return await _repositorio.CondicaoJogo.ListarAsync();
     }
 }

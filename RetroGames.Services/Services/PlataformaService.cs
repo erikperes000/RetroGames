@@ -8,18 +8,15 @@ namespace RetroGames.Services.Services;
 public class PlataformaService : IPlataformaService{
     private readonly IRepositorySet _repositorio;
 
-    public PlataformaService(IRepositorySet repositorio)
-    {
+    public PlataformaService(IRepositorySet repositorio){
         _repositorio = repositorio;
     }
 
-    public async Task<List<Plataforma>> ListarAsync()
-    {
+    public async Task<List<Plataforma>> ListarAsync(){
         return await _repositorio.Plataforma.ListarAsync();
     }
 
-    public async Task<Plataforma> BuscarPorIdAsync(uint id)
-    {
+    public async Task<Plataforma> BuscarPorIdAsync(uint id){
         var plataforma = await _repositorio.Plataforma.BuscarPorIdAsync(id);
 
         if (plataforma == null)
@@ -28,12 +25,10 @@ public class PlataformaService : IPlataformaService{
         return plataforma;
     }
 
-    public async Task<Plataforma> InserirAsync(Plataforma plataforma)
-    {
+    public async Task<Plataforma> InserirAsync(Plataforma plataforma){
         plataforma.Nome = plataforma.Nome.Trim();
 
-        var nomeExiste = await _repositorio.Plataforma
-            .ExisteComNomeAsync(plataforma.Nome);
+        var nomeExiste = await _repositorio.Plataforma.ExisteComNomeAsync(plataforma.Nome);
 
         Console.WriteLine($"Nome recebido: '{plataforma.Nome}'");
         Console.WriteLine($"Nome encontrado: {nomeExiste}");
@@ -41,29 +36,23 @@ public class PlataformaService : IPlataformaService{
         if (nomeExiste)
             throw new BusinessRuleException(BusinessErrors.PLATAFORMA_NOME_DUPLICADO);
 
-        try
-        {
+        try{
             plataforma.Id = await _repositorio.Plataforma.InserirAsync(plataforma);
             return plataforma;
-        }
-        catch (RegistroDuplicadoException)
-        {
+        }catch (RegistroDuplicadoException){
             throw new BusinessRuleException(BusinessErrors.PLATAFORMA_NOME_DUPLICADO);
         }
     }
 
-    public async Task AlterarAsync(Plataforma plataforma)
-    {
-        var plataformaExistente = await _repositorio.Plataforma
-            .BuscarPorIdAsync(plataforma.Id);
+    public async Task AlterarAsync(Plataforma plataforma){
+        var plataformaExistente = await _repositorio.Plataforma.BuscarPorIdAsync(plataforma.Id);
 
         if (plataformaExistente == null)
             throw new BusinessRuleException(BusinessErrors.PLATAFORMA_NAO_ENCONTRADA);
 
         plataforma.Nome = plataforma.Nome.Trim();
 
-        var nomeExiste = await _repositorio.Plataforma
-            .ExisteComNomeAsync(plataforma.Nome, plataforma.Id);
+        var nomeExiste = await _repositorio.Plataforma.ExisteComNomeAsync(plataforma.Nome, plataforma.Id);
 
         Console.WriteLine($"Nome recebido: '{plataforma.Nome}'");
         Console.WriteLine($"Nome encontrado: {nomeExiste}");
@@ -71,18 +60,14 @@ public class PlataformaService : IPlataformaService{
         if (nomeExiste)
             throw new BusinessRuleException(BusinessErrors.PLATAFORMA_NOME_DUPLICADO);
 
-        try
-        {
+        try{
             await _repositorio.Plataforma.AlterarAsync(plataforma);
-        }
-        catch (RegistroDuplicadoException)
-        {
+        }catch (RegistroDuplicadoException){
             throw new BusinessRuleException(BusinessErrors.PLATAFORMA_NOME_DUPLICADO);
         }
     }
 
-    public async Task ExcluirAsync(uint id)
-    {
+    public async Task ExcluirAsync(uint id){
         var plataforma = await _repositorio.Plataforma.BuscarPorIdAsync(id);
 
         if (plataforma == null)

@@ -13,52 +13,33 @@ public class FluentValidationFilter : IAsyncActionFilter, IOrderedFilter
 
     public int Order => -3000;
 
-    public FluentValidationFilter(IServiceProvider serviceProvider)
-    {
+    public FluentValidationFilter(IServiceProvider serviceProvider){
         _serviceProvider = serviceProvider;
     }
 
-    public async Task OnActionExecutionAsync(
-        ActionExecutingContext context,
-        ActionExecutionDelegate next)
-    {
+    public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next){
         // Verifica se algum parâmetro obrigatório do corpo
         // da requisição veio nulo.
-        foreach (var parametro in context.ActionDescriptor.Parameters)
-        {
-            if (parametro.BindingInfo?.BindingSource == BindingSource.Body
-                && context.ActionArguments.TryGetValue(
-                    parametro.Name, out var valor)
-                && valor == null)
-            {
-                context.Result = new BadRequestObjectResult(new
-                {
-                    responseCode = ResponseCodes.MODEL_NULL,
-                    errorMessage = "O modelo veio nulo."
-                });
-
+        foreach (var parametro in context.ActionDescriptor.Parameters){
+            if (parametro.BindingInfo?.BindingSource == BindingSource.Body && context.ActionArguments.TryGetValue(parametro.Name, out var valor) && valor == null){
+                context.Result = new BadRequestObjectResult(new{responseCode = ResponseCodes.MODEL_NULL, errorMessage = "O modelo veio nulo."});
                 return;
             }
         }
 
         // Executa os validators encontrados para cada argumento.
-        foreach (var argumento in context.ActionArguments)
-        {
+        foreach (var argumento in context.ActionArguments){
             if (argumento.Value == null)
                 continue;
 
-            var tipoValidator = typeof(IValidator<>)
-                .MakeGenericType(argumento.Value.GetType());
+            var tipoValidator = typeof(IValidator<>).MakeGenericType(argumento.Value.GetType());
 
-            var validator = _serviceProvider.GetService(tipoValidator)
-                as IValidator;
+            var validator = _serviceProvider.GetService(tipoValidator) as IValidator;
 
             if (validator == null)
                 continue;
 
-            var resultado = await validator.ValidateAsync(
-                new ValidationContext<object>(argumento.Value),
-                context.HttpContext.RequestAborted);
+            var resultado = await validator.ValidateAsync(new ValidationContext<object>(argumento.Value), context.HttpContext.RequestAborted);
 
             if (resultado.IsValid)
                 continue;
@@ -75,8 +56,7 @@ public class FluentValidationFilter : IAsyncActionFilter, IOrderedFilter
                         .Select(erro => erro.ErrorMessage)
                         .ToArray());
 
-            context.Result = new BadRequestObjectResult(new
-            {
+            context.Result = new BadRequestObjectResult(new{
                 responseCode = ResponseCodes.MODEL_STATE_INVALIDO,
                 data = errosPorCampo,
                 errorMessage = "Há um erro com o modelo enviado."

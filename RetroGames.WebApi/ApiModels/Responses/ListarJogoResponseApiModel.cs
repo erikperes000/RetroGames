@@ -1,7 +1,6 @@
 namespace RetroGames.WebApi.ApiModels.Responses;
 
-public class ListarJogoResponseApiModel
-{
+public class ListarJogoResponseApiModel{
     public uint Id { get; set; }
     public string Nome { get; set; } = string.Empty;
     public ushort AnoLancamento { get; set; }

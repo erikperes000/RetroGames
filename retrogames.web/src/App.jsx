@@ -5,6 +5,7 @@ import Catalogo from './pages/Catalogo/Catalogo'
 import DetalheJogo from './pages/Catalogo/DetalheJogo'
 import Login from './pages/Login/Login'
 import NaoEncontrada from './pages/NaoEncontrada'
+import Plataforma from './pages/Auxiliares/Plataforma'
 
 function Jogos() {
   return <h1>Administração de Jogos</h1>
@@ -16,10 +17,6 @@ function NovoJogo() {
 
 function EditarJogo() {
   return <h1>Editar Jogo</h1>
-}
-
-function Plataformas() {
-  return <h1>Administração de Plataformas</h1>
 }
 
 function App() {
@@ -37,7 +34,7 @@ function App() {
           <Route path="jogos" element={<Jogos />} />
           <Route path="jogos/novo" element={<NovoJogo />} />
           <Route path="jogos/:id/editar" element={<EditarJogo />} />
-          <Route path="plataformas" element={<Plataformas />} />
+          <Route path="plataformas" element={<Plataforma />} />
         </Route>
 
         <Route path="*" element={<NaoEncontrada />} />
